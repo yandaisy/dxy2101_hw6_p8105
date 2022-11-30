@@ -1,0 +1,11 @@
+---
+title: "dxy2101_hw6_p8105"
+author: "Daisy Yan"
+date: "2022-12-03"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
