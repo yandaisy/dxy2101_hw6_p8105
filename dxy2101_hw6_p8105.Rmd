@@ -40,3 +40,40 @@ homicide_data =
   filter(victim_race == "White" | victim_race == "Black") %>%
   mutate(victim_age = as.numeric(victim_age))
 ```
+
+For the city of Baltimore, MD, use the glm function to fit a logistic regression with resolved vs unresolved as the outcome and victim age, sex and race as predictors.
+
+```{r logistic}
+# Filter for Baltimore, MD
+baltimore_df =
+  homicide_data %>%
+  filter(city_state == "Baltimore, MD") %>%
+  mutate(
+    resolved = as.numeric(status == "solved"),
+    victim_race = fct_relevel(victim_race, "White")) %>% 
+  select(resolved, victim_age, victim_race, victim_sex)
+
+# Fit logistic regression
+fit_logistic = 
+  baltimore_df %>% 
+  glm(resolved ~ victim_age + victim_race + victim_sex, data = ., family = binomial()) 
+
+# Obtain estimate and CI of OR
+fit_logistic %>% 
+  broom::tidy() %>% 
+  mutate(
+    OR = exp(estimate),
+    low.lim = OR - (1.96*std.error),
+    up.lim = OR + (1.96*std.error)) %>%
+  select(term, log_OR = estimate, OR, low.lim, up.lim, p.value) %>% 
+  knitr::kable(digits = 3)
+```
+
+The odds ratio for solving homicides comparing male victims to female victims, controlling for age and race, is 0.426 (95% CI: 0.155, 0.696).
+
+Now, run glm for each of the cities in your dataset, and extract the adjusted odds ratio (and CI) for solving homicides comparing male victims to female victims.
+
+```{r glm_all}
+
+```
+
